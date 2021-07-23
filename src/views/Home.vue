@@ -1,18 +1,29 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1 align="center">Income/Expense Records</h1>
+    <RecordForm/>
+    <RecordOverall/>
+    <RecordTable/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import RecordTable from '@/components/RecordTable.vue'
+import RecordForm from '@/components/RecordForm.vue'
+import RecordOverall from '@/components/RecordOverall.vue'
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  components: { RecordTable, RecordForm, RecordOverall },
+  data() {
+    return {
+    }
+  },
+  methods:{
   }
 }
+
+export const closeForm = () => {
+  formDisplay = false
+}
 </script>
+
