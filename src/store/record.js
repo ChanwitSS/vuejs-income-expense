@@ -5,10 +5,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    data: []
+    data: [],
   },
   getters: {
-    records: (state) => state.data
+    records: (state) => state.data,
+    balance: (state) => state.data.map((item, index) => {
+      var balance = 0
+      if (state.data.type == 'income') {
+        balance += item.value;
+      }else {
+        balance -= item.value;
+      }
+      return balance;
+    }),
   },
   mutations: {
       fetch(state, { res }) {
@@ -19,6 +28,8 @@ export default new Vuex.Store({
       },
       edit (state, { payload }) {
         state.data[payload.index].name = payload.name
+        state.data[payload.index].date = payload.date
+        state.data[payload.index].value = payload.value
         state.data[payload.index].type = payload.type
       }
   },
@@ -27,14 +38,14 @@ export default new Vuex.Store({
         let res = [
             {
                 name: 'Salary',
-                type: 'Income',
-                date: '01/7/2564',
+                type: 'income',
+                date: '2021-07-24',
                 value: 100
             },
             {
                 name: 'Food',
-                type: 'Expense',
-                date: '02/7/2564',
+                type: 'expense',
+                date: '2021-07-24',
                 value: 25000
             },
         ]

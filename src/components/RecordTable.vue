@@ -7,7 +7,7 @@
           <th>Description</th>
           <th>Date</th>
           <th>Type</th>
-          <th>Value</th>
+          <th>Value(Bath)</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -19,7 +19,7 @@
             <td>{{ record.type }}</td>
             <td>{{ record.value }}</td>
             <td>
-              <button @click="openForm(index)">Edit</button>
+              <button @click="openForm(index, record)">Edit</button>
             </td>
         </tr>
       </tbody>
@@ -27,26 +27,29 @@
 
     <div class='modal' v-if="formDisplay">
       <div class="inputContainer" id="editForm" :model="form" >
-        <h3>Edit record</h3>
+        <h2>Edit record</h2>
 
-        <div>
-          <label for="name">Name</label>
+        <div class="inputField">
+          <label for="name" class='fieldName'>Description: </label>
           <input type="text" v-model="form.name">
         </div>
         
-        <div>
-          <label for="name">Date</label>
-          <input type="text" v-model="form.date">
+        <div class="inputField">
+          <label for="name" class='fieldName'>Date: </label>
+          <input type="date" id="inpurDateField" min="2021-07-24" v-model="form.date">
         </div>
 
-        <div>
-          <label for="name">Type</label>
-          <input type="text" v-model="form.type">
+        <div class="inputField">
+          <label for="name" class='fieldName'>Type: </label>
+          <select id="type" v-model="form.type" selected="form.type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
         </div>
 
-        <div>
-          <label for="name">Value</label>
-          <input type="text" v-model="form.value">
+        <div class="inputField">
+          <label for="name" class='fieldName'>Value(Bath): </label>
+          <input type="number" v-model="form.value">
         </div>
 
         <button class="confirmBtn" @click="editRecord()">Confirm</button>
@@ -58,19 +61,17 @@
 
 <script>
 import RecordStore from '@/store/record'
-import RecordForm from '@/components/RecordForm'
 export default {
-    components: { RecordForm },
     data() {
       return {
           records: [],
+          formDisplay: false,
           editIndex: -1,
-          formDisplay: null,
           form: {
             name: '',
             date: '',
             type: '',
-            value: '',
+            value: 0,
           }
       }
     },
@@ -94,11 +95,22 @@ export default {
         RecordStore.dispatch('editRecord', payload)
         this.closeForm()
     },
-      openForm(index) {
+      openForm(index, record) {
         this.formDisplay = true
         this.editIndex = index
+        let cloned = JSON.parse(JSON.stringify(record))
+        this.form.name = cloned.name
+        this.form.type = cloned.type
+        this.form.value = cloned.value
+        this.form.date = cloned.date
       },
       closeForm() {
+        this.form = {
+          name: '',
+          date: '',
+          type: '',
+          value: '',
+        },
         this.formDisplay = false
       }
     }
@@ -144,5 +156,53 @@ th, td {
 }
 .cancelBtn{
   transform: translate(0%, 00%);
+}
+button{
+  margin: 15px;
+  position: relative;
+  background-color: #29B6F6;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.confirmBtn{
+  background-color: #e7e7e7; 
+  color: black;
+  transform: translate(0%, 0%);
+}
+.cancelBtn{
+  transform: translate(0%, 0%);
+}
+.inputField{
+  padding: 12px;
+  margin: 5px;
+}
+input{
+  padding: 5px;
+  margin-left: 30px;
+  border-radius: 4px;;
+  width: 300px;
+  height: 20px;
+  border-color: black;
+  border-width: 1px;
+}
+select{
+  padding: 5px;
+  margin-left: 30px;
+  border-radius: 4px;;
+  width: 310px;
+  height: 30px;
+  border-color: black;
+  border-width: 1px;
+}
+.fieldName{
+  position: absolute;
+  left: 80px;
+  width: 70px;
+  padding: 5px;
 }
 </style>

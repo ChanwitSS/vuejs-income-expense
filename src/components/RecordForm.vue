@@ -1,28 +1,31 @@
 <template>
-  <div align="center">
+  <div>
     <button @click="openForm()">Add record</button>
     <div class='modal' v-if="formDisplay">
       <div class="inputContainer" id="addForm" :model="form" >
-        <h3>Add record</h3>
+        <h2>Add record</h2>
 
-        <div>
-          <label for="name">Name</label>
+        <div class="inputField">
+          <label for="name" class='fieldName'>Description: </label>
           <input type="text" v-model="form.name">
         </div>
         
-        <div>
-          <label for="name">Date</label>
-          <input type="text" v-model="form.date">
+        <div class="inputField">
+          <label for="name" class='fieldName'>Date: </label>
+          <input type="date" id="inpurDateField" min="2021-07-24" v-model="form.date">
         </div>
 
-        <div>
-          <label for="name">Type</label>
-          <input type="text" v-model="form.type">
+        <div class="inputField">
+          <label for="name" class='fieldName'>Type: </label>
+          <select id="type" v-model="form.type">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
         </div>
 
-        <div>
-          <label for="name">Value</label>
-          <input type="text" v-model="form.value">
+        <div class="inputField">
+          <label for="name" class='fieldName'>Value(Bath): </label>
+          <input type="number" v-model="form.value">
         </div>
 
         <button class="confirmBtn" @click="addRecord()">Confirm</button>
@@ -43,7 +46,7 @@ export default {
           name: '',
           date: '',
           type: '',
-          value: '',
+          value: 0,
       },
     }
   },
@@ -63,6 +66,12 @@ export default {
       this.formDisplay = true
     },
     closeForm() {
+      this.form = {
+        name: '',
+        date: '',
+        type: '',
+        value: 0,
+      },
       this.formDisplay = false
     }
   },
@@ -91,18 +100,54 @@ export default {
   padding: 20px;
   height: 400px;
   width: 600px;
-  border-color: lightblue;
-  background-color:white;
   border-radius: 2%;
 }
-.button{
+button{
   margin: 15px;
   position: relative;
+  background-color: #29B6F6;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 .confirmBtn{
+  background-color: #e7e7e7; 
+  color: black;
   transform: translate(0%, 0%);
 }
 .cancelBtn{
-  transform: translate(0%, 00%);
+  transform: translate(0%, 0%);
+}
+.inputField{
+  padding: 12px;
+  margin: 5px;
+}
+input{
+  padding: 5px;
+  margin-left: 30px;
+  border-radius: 4px;;
+  width: 300px;
+  height: 20px;
+  border-color: black;
+  border-width: 1px;
+}
+select{
+  padding: 5px;
+  margin-left: 30px;
+  border-radius: 4px;;
+  width: 310px;
+  height: 30px;
+  border-color: black;
+  border-width: 1px;
+}
+.fieldName{
+  position: absolute;
+  left: 80px;
+  width: 70px;
+  padding: 5px;
 }
 </style>
