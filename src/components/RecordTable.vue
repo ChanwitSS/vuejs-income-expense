@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table">
     <table align="center">
       <thead>
         <tr>
@@ -7,7 +7,7 @@
           <th>Description</th>
           <th>Date</th>
           <th>Type</th>
-          <th>Value(Bath)</th>
+          <th>Value(Baht)</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -36,7 +36,7 @@
         
         <div class="inputField">
           <label for="name" class='fieldName'>Date: </label>
-          <input type="date" id="inpurDateField" min="2021-07-24" v-model="form.date">
+          <input type="date" id="inputDateField" min="2021-07-24" v-model="form.date">
         </div>
 
         <div class="inputField">
@@ -48,7 +48,7 @@
         </div>
 
         <div class="inputField">
-          <label for="name" class='fieldName'>Value(Bath): </label>
+          <label for="name" class='fieldName'>Value(Baht): </label>
           <input type="number" v-model="form.value">
         </div>
 
@@ -147,10 +147,6 @@ th, td {
   background-color:white;
   border-radius: 2%;
 }
-.button{
-  margin: 15px;
-  position: relative;
-}
 .confirmBtn{
   transform: translate(0%, 0%);
 }
@@ -204,5 +200,8 @@ select{
   left: 80px;
   width: 70px;
   padding: 5px;
+}
+.table {
+  margin-top: 150px;
 }
 </style>

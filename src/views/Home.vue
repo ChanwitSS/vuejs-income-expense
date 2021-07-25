@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1 align="center">Income/Expense Records</h1>
+    <h1>Income/Expense Records</h1>
     <RecordForm/>
     <RecordOverall/>
     <RecordTable/>
@@ -21,9 +21,8 @@ export default {
   methods:{
   }
 }
-
-export const closeForm = () => {
-  formDisplay = false
-}
 </script>
 
+<style scoped>
+
+</style>

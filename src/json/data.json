@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Salary",
+        "type": "income",
+        "date": "2021-07-24",
+        "value": 25000
+    },
+    {
+        "name": "Food",
+        "type": "expense",
+        "date": "2021-07-25",
+        "value": 100
+    }
+]

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="openForm()">Add record</button>
+    <button class="addRecordBtn" @click="openForm()">New record</button>
     <div class='modal' v-if="formDisplay">
       <div class="inputContainer" id="addForm" :model="form" >
         <h2>Add record</h2>
@@ -12,7 +12,7 @@
         
         <div class="inputField">
           <label for="name" class='fieldName'>Date: </label>
-          <input type="date" id="inpurDateField" min="2021-07-24" v-model="form.date">
+          <input type="date" id="inputDateField" min="2021-07-24" v-model="form.date">
         </div>
 
         <div class="inputField">
@@ -24,7 +24,7 @@
         </div>
 
         <div class="inputField">
-          <label for="name" class='fieldName'>Value(Bath): </label>
+          <label for="name" class='fieldName'>Value(Baht): </label>
           <input type="number" v-model="form.value">
         </div>
 
@@ -102,18 +102,6 @@ export default {
   width: 600px;
   border-radius: 2%;
 }
-button{
-  margin: 15px;
-  position: relative;
-  background-color: #29B6F6;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
 .confirmBtn{
   background-color: #e7e7e7; 
   color: black;
@@ -149,5 +137,10 @@ select{
   left: 80px;
   width: 70px;
   padding: 5px;
+}
+.addRecordBtn {
+  position: absolute;
+  left: 700px;
+  margin-top: 40px;
 }
 </style>

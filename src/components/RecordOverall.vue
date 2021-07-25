@@ -1,8 +1,17 @@
 <template>
   <div>
-    <div>
-      <h3>Balance: {{ balance }}</h3>
-      <Chart align="center" width="550" type="bar" :options="chartOptions" :series="series"></Chart>
+    <button class="overallBtn" @click="openForm()">Overall</button>
+    <div class="modal" v-if="display === true">
+      <div class="container">
+        <h3>Balance: {{ balance }}</h3>
+        <Chart style="margin-top: 20px;" type="bar" align="center" height="350" width="600" :options="chartOptions" :series="series"></Chart>
+        <div class="inputField1">
+          <label for="name" class='fieldName1'>Time peroid: </label>
+          <input type="date" id="startDateField" v-model="startDate" @change="calOverall()">
+          <input type="date" id="endDateField" v-model="endDate" @change="calOverall()">
+        </div>
+        <button @click="closeForm()">Close</button>
+      </div>
     </div>
   </div>
 </template>
@@ -10,28 +19,40 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 import RecordStore from '@/store/record'
+import moment, { max } from 'moment'
 
 export default {
   components: { Chart: VueApexCharts },
   data() {
       return {
-        balance: RecordStore.getters.balance,
+        startDate: null,
+        endDate: null,
+        minDate: null,
+        maxDate: null,
+        display: false,
+        balance: null,
         chartOptions: {
           chart: {
             id: 'vuechart-example',
           },
           xaxis: {
-            categories: ['Jan','Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            categories: ['Income', 'Expense'],
           },
         },
-        series: [{
-          name: 'series-1',
-          data: [30, 40, 45, 50, 49, 60, 70, 81]
-        }]
+        series: [
+          {
+            name: 'Income',
+            data: [0]
+          }, {
+            name: 'Expense',
+            data: [0]
+          }
+        ]
       }
   },
   created() {
     this.fetchRecord()
+    this.findMinMaxDate()
   },
   methods: {
     async fetchRecord() {
@@ -40,13 +61,91 @@ export default {
     },
     findAllMonth() {
       RecordStore.getters.records
+    },
+    openForm() {
+      this.display = true
+      this.calOverall(true)
+    },
+    closeForm() {
+      this.form = {
+        name: '',
+        date: '',
+        type: '',
+        value: '',
+      },
+      this.display = false
+    },
+    calOverall(load) {
+      let balance = 0
+      let income = 0
+      let expense = 0
+      var status = 1
+      this.findMinMaxDate(load)
+      RecordStore.getters.records.map((item, index) => {
+          if (moment(item.date).isBetween(this.minDate, this.maxDate) && status == 1) {
+            if (item.type == "income") {
+              balance += item.value
+              income += item.value
+            } else {
+              balance -= item.value
+              expense += item.value
+            }
+            this.balance = balance
+            this.series = [
+              {
+                name: 'Income',
+                data: [income]
+              }, {
+                name: 'Expense',
+                data: [expense]
+              }
+            ]
+          } else {
+            status = 0
+          }
+        })
+        if (status == 0) {
+          this.series = [
+              {
+                name: 'Income',
+                data: [0]
+              }, {
+                name: 'Expense',
+                data: [0]
+              }
+            ]
+        }
+    },
+    findMinMaxDate(load) {
+      var minDate = null
+      var maxDate = null
+      if (load) {
+        RecordStore.getters.records.map((item, index) => {
+          if (index == 0) {
+            minDate = item.date
+            maxDate = item.date
+          } else {
+            if (moment(item.date).isBefore(minDate)) {
+              minDate = item.date
+            } else if (moment(item.date).isAfter(maxDate)) {
+              maxDate = item.date
+            }
+          }
+        })
+        this.minDate = minDate
+        this.maxDate = maxDate
+      } else {
+        this.minDate = this.startDate
+        this.maxDate = this.endDate
+      }
+
     }
 }
   }
 </script>
 
 <style>
-.overall{
+.modal {
   display: block; 
   position: fixed; 
   z-index: 1; 
@@ -58,5 +157,29 @@ export default {
   background-color: rgb(0,0,0); 
   background-color: rgba(0,0,0,0.4); 
   padding-top: 60px;
+}
+.container{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  height: 600px;
+  width: 1100px;
+  border-color: lightblue;
+  background-color:white;
+  border-radius: 2%;
+}
+.overallBtn {
+  position: absolute;
+  left: 850px;
+  margin-top: 40px;
+}
+.inputField1 {
+  margin-top: 40px;
+}
+.fieldName1 {
+  margin-left: 70px;
+  margin-top: -10px;
 }
 </style>
