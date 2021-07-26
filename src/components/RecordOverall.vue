@@ -76,19 +76,19 @@ export default {
       },
       this.display = false
     },
-    calOverall() {
+    async calOverall() {
       let balance = 0
       let income = 0
       let expense = 0
-      var status = 1
-      if (this.count == 0) {
+      var status = 0
+      if (this.startDate == null && this.endDate == null) {
         RecordStore.getters.records.map((item, index) => {
           if (item.type == "income") {
               balance += item.value
-              income += item.value
+              income += parseInt(item.value)
             } else {
-              balance -= item.value
-              expense += item.value
+              balance -= parseInt(item.value)
+              expense += parseInt(item.value)
             }
             this.balance = balance
             this.series = [
@@ -102,48 +102,46 @@ export default {
               }
             ]
         })
-        this.count += 1
       } else {
         this.findMinMaxDate()
-        RecordStore.getters.records.map((item, index) => {
-          if (moment(item.date).isBetween(this.minDate, this.maxDate) && status == 1) {
+        await RecordStore.getters.records.map(item => {
+          if ((moment(item.date).isBetween(this.minDate, this.maxDate) || moment(item.date).isSame(this.minDate) || moment(item.date).isSame(this.maxDate)) || this.count == 0) {
             if (item.type == "income") {
-              balance += item.value
-              income += item.value
+              balance += parseInt(item.value)
+              income += parseInt(item.value)
             } else {
-              balance -= item.value
-              expense += item.value
+              balance -= parseInt(item.value)
+              expense += parseInt(item.value)
             }
             this.balance = balance
             this.series = [
-            {
-              name: 'Income',
-              data: [income]
-            },
-            {
-              name: 'Expense',
-              data: [expense]
-            }
-          ]
-          } else {
-            status = 0
+              {
+                name: 'Income',
+                data: [income]
+              },
+              {
+                name: 'Expense',
+                data: [expense]
+              }
+            ]
+            status = 1
           }
         })
-        if (status == 0) {
-          this.balance = balance
-          this.series = [
-            {
-              name: 'Income',
-              data: [0]
-            },
-            {
-              name: 'Expense',
-              data: [0]
-            }
-          ]
-        }
       }
-      console.log(this.count)
+      if (status == 0 && count != 0) {
+        this.balance = balance
+        this.series = [
+          {
+            name: 'Income',
+            data: [0]
+          },
+          {
+            name: 'Expense',
+            data: [0]
+          }
+        ]
+      }
+      this.count += 1
     },
     findMinMaxDate(load) {
       var minDate = null
